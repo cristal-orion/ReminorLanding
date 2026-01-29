@@ -5,7 +5,7 @@ const CTA = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [copied, setCopied] = useState(false);
 
-  const dockerCommand = 'docker pull cristalorion/reminor:latest';
+  const dockerCommand = 'git clone https://github.com/cristal-orion/Reminor && cd Reminor && docker compose up';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(dockerCommand);
@@ -90,7 +90,7 @@ const CTA = () => {
               className="btn-terminal-primary flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
-              DOCKER PULL REMINOR
+              CLONE & DEPLOY
             </a>
             <a
               href="https://app.reminor.it"

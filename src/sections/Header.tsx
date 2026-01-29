@@ -5,10 +5,10 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { label: 'DOCS', href: '#docs' },
-    { label: 'GITHUB', href: 'https://github.com/cristal-orion/Reminor' },
-    { label: 'DOCKER', href: '#docker' },
-    { label: 'MEMVID', href: '#memvid' },
+    { label: 'FEATURES', href: '#features' },
+    { label: 'DEMO', href: '#demo' },
+    { label: 'DIY', href: '#diy' },
+    { label: 'FAQ', href: '#faq' },
   ];
 
   return (

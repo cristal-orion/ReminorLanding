@@ -136,20 +136,28 @@ const Demo = () => {
       case 'settings':
         return (
           <div className="space-y-4">
-            <div className="text-[#00ff41] mb-4">SYSTEM CONFIGURATION</div>
+            <div className="text-[#00ff41] mb-4">AI CONFIGURATION</div>
             <div className="space-y-2">
               {[
-                { key: 'LLM_PROVIDER', value: 'ollama' },
-                { key: 'MODEL', value: 'llama3.2' },
-                { key: 'ENCRYPTION', value: 'AES-256' },
-                { key: 'AUTO_BACKUP', value: 'true' },
-                { key: 'THEME', value: 'terminal' },
+                { key: 'LLM_PROVIDER', value: 'anthropic' },
+                { key: 'MODEL', value: 'claude-3-sonnet' },
+                { key: 'API_KEY', value: '••••••••••••' },
               ].map((setting, i) => (
                 <div key={i} className="flex justify-between border-b border-[#333] py-2">
                   <span className="text-[#666]">{setting.key}</span>
                   <span className="text-[#00ff41]">{setting.value}</span>
                 </div>
               ))}
+            </div>
+            <div className="mt-4 pt-4 border-t border-[#333]">
+              <div className="text-xs text-[#666] mb-2">AVAILABLE PROVIDERS (via LiteLLM)</div>
+              <div className="flex flex-wrap gap-2">
+                {['OpenAI', 'Anthropic', 'Groq', 'Gemini', 'Mistral', 'Ollama', 'DeepSeek'].map((p, i) => (
+                  <span key={i} className={`text-[10px] px-2 py-1 border ${i === 1 ? 'border-[#00ff41] text-[#00ff41]' : 'border-[#333] text-[#666]'}`}>
+                    {p}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         );
@@ -159,7 +167,7 @@ const Demo = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] relative">
+    <section id="demo" ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] relative">
       {/* Background Effects */}
       <div className="absolute inset-0 matrix-bg" />
       

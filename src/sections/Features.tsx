@@ -4,8 +4,8 @@ import { Cpu, Container, Database, Search, Heart, Keyboard } from 'lucide-react'
 const features = [
   {
     icon: Cpu,
-    title: 'API Agnostic',
-    description: 'Use any LLM provider. Bring your own intelligence without being locked into a single ecosystem. OpenAI, Ollama, or your custom endpoint.',
+    title: 'Bring Your Own AI',
+    description: 'Powered by LiteLLM. Use OpenAI, Anthropic, Groq, Google Gemini, Mistral, DeepSeek, Ollama, or any OpenAI-compatible API. One config, endless providers.',
   },
   {
     icon: Container,
@@ -14,8 +14,8 @@ const features = [
   },
   {
     icon: Database,
-    title: 'Memvid Sync',
-    description: 'Safe & Downloadable memory storage. Your personal data stays localized and encrypted. Export anytime, anywhere.',
+    title: 'Full Data Export',
+    description: 'Your data is truly yours. Download your complete diary as a backup anytime. No lock-in, no hostage data. Export and go.',
   },
   {
     icon: Search,
@@ -24,13 +24,13 @@ const features = [
   },
   {
     icon: Heart,
-    title: 'Emotion Tracking',
-    description: 'Monitor moods over time. Visualizing the psyche through data-driven sentiment analysis. Understand yourself better.',
+    title: '8-Emotion Analysis',
+    description: 'Automatic detection of joy, sadness, anger, fear, surprise, disgust, trust, and anticipation. Visualize your emotional patterns over time.',
   },
   {
     icon: Keyboard,
-    title: 'No-Mouse UI',
-    description: 'Zero distraction interface. A keyboard-driven flow designed for deep work and reflection. Vim-like navigation.',
+    title: 'Knowledge Extraction',
+    description: 'Reminor learns about you. It automatically extracts and remembers personal facts, preferences, and life events from your entries.',
   },
 ];
 
@@ -56,7 +56,7 @@ const Features = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] relative overflow-hidden">
+    <section id="features" ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] relative overflow-hidden">
       {/* Background Grid */}
       <div className="absolute inset-0 grid-pattern opacity-50" />
       
@@ -115,23 +115,22 @@ const Features = () => {
           ))}
         </div>
 
-        {/* Bottom Stats */}
+        {/* LLM Providers Banner */}
         <div className="mt-16 reveal" style={{ transitionDelay: '0.6s' }}>
           <div className="border border-[#333] bg-[#0d0d0d] p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              {[
-                { value: '2.4K+', label: 'GITHUB STARS' },
-                { value: '180+', label: 'FORKS' },
-                { value: '100%', label: 'OPEN SOURCE' },
-                { value: '0', label: 'TRACKING' },
-              ].map((stat, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="font-ascii text-3xl sm:text-4xl text-[#00ff41] terminal-glow">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs tracking-widest text-[#666]">{stat.label}</div>
+            <div className="text-center mb-4">
+              <span className="text-xs tracking-[0.2em] text-[#666]">SUPPORTED LLM PROVIDERS VIA LITELLM</span>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 text-sm">
+              {['OpenAI', 'Anthropic', 'Groq', 'Google Gemini', 'Mistral', 'DeepSeek', 'Ollama', 'Azure', 'AWS Bedrock'].map((provider, i) => (
+                <div key={i} className="flex items-center gap-2 text-[#888] hover:text-[#00ff41] transition-colors">
+                  <span className="w-1.5 h-1.5 bg-[#00ff41] rounded-full" />
+                  <span className="font-mono text-xs">{provider}</span>
                 </div>
               ))}
+            </div>
+            <div className="text-center mt-4">
+              <span className="text-[10px] text-[#666]">+ any OpenAI-compatible endpoint</span>
             </div>
           </div>
         </div>

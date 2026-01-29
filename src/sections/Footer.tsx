@@ -1,4 +1,4 @@
-import { Star, GitFork } from 'lucide-react';
+import { Github, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -58,17 +58,17 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:text-[#00ff41] transition-colors"
               >
-                <Star className="w-3 h-3" />
-                <span>2.4K STARS</span>
+                <Github className="w-3 h-3" />
+                <span>VIEW ON GITHUB</span>
               </a>
               <a
-                href="https://github.com/cristal-orion/Reminor/fork"
+                href="https://app.reminor.it"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:text-[#00ff41] transition-colors"
               >
-                <GitFork className="w-3 h-3" />
-                <span>180 FORKS</span>
+                <ExternalLink className="w-3 h-3" />
+                <span>LIVE DEMO</span>
               </a>
             </div>
           </div>
