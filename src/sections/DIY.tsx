@@ -36,6 +36,7 @@ const carouselImages = [
   { src: '/upload/Stampante.jpg', alt: 'Reminor - 3D Printer View' },
   { src: '/upload/Viewrear.jpg', alt: 'Reminor - Rear View' },
   { src: '/upload/viewsx.jpg', alt: 'Reminor - Side View' },
+  { src: '/upload/long5.jfif', alt: 'Reminor - Front View' },
 ];
 
 const DIY = () => {
