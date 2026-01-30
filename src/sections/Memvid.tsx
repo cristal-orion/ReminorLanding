@@ -1,9 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { Database, Search, Brain, Zap, FileText, MessageSquare } from 'lucide-react';
+import { createTimeline, utils } from 'animejs';
+
+const { stagger } = utils;
 
 const Memvid = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Entrance animation refs
+  const headerBadgeRef = useRef<HTMLDivElement>(null);
+  const headerTitleRef = useRef<HTMLHeadingElement>(null);
+  const headerDescRef = useRef<HTMLParagraphElement>(null);
+  const leftPanelRef = useRef<HTMLDivElement>(null);
+  const rightTitleRef = useRef<HTMLDivElement>(null);
+  const featureCardsRef = useRef<HTMLDivElement>(null);
+  const codeSnippetRef = useRef<HTMLDivElement>(null);
 
   // Animation cycle for the vector database visualization
   useEffect(() => {
@@ -12,6 +25,102 @@ const Memvid = () => {
     }, 2500);
     return () => clearInterval(interval);
   }, []);
+
+  // Scroll-triggered entrance animation
+  useEffect(() => {
+    if (hasAnimated) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setHasAnimated(true);
+            observer.disconnect();
+
+            const tl = createTimeline({
+              defaults: {
+                ease: 'outExpo',
+                duration: 900,
+              },
+            });
+
+            // Header badge — slide from left
+            if (headerBadgeRef.current) {
+              tl.add(headerBadgeRef.current, {
+                opacity: [0, 1],
+                translateX: [-25, 0],
+                duration: 700,
+              }, 0);
+            }
+
+            // Title — rise up
+            if (headerTitleRef.current) {
+              tl.add(headerTitleRef.current, {
+                opacity: [0, 1],
+                translateY: [30, 0],
+              }, 100);
+            }
+
+            // Description — rise up
+            if (headerDescRef.current) {
+              tl.add(headerDescRef.current, {
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 700,
+              }, 300);
+            }
+
+            // Left panel — scale + fade
+            if (leftPanelRef.current) {
+              tl.add(leftPanelRef.current, {
+                opacity: [0, 1],
+                scale: [0.95, 1],
+                translateY: [25, 0],
+              }, 400);
+            }
+
+            // Right title + paragraphs
+            if (rightTitleRef.current) {
+              tl.add(rightTitleRef.current, {
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 800,
+              }, 400);
+            }
+
+            // Feature cards — stagger from right
+            if (featureCardsRef.current) {
+              const cards = featureCardsRef.current.children;
+              if (cards.length) {
+                tl.add(cards, {
+                  opacity: [0, 1],
+                  translateX: [30, 0],
+                  delay: stagger(120),
+                  duration: 700,
+                }, 700);
+              }
+            }
+
+            // Code snippet — rise up last
+            if (codeSnippetRef.current) {
+              tl.add(codeSnippetRef.current, {
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 700,
+              }, 1000);
+            }
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasAnimated]);
 
   const steps = [
     {
@@ -48,14 +157,26 @@ const Memvid = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 border border-[#333] bg-[#1a1a1a] text-[10px] tracking-widest text-[#00ff41] mb-6">
+          <div
+            ref={headerBadgeRef}
+            style={{ opacity: 0 }}
+            className="inline-flex items-center gap-2 px-3 py-1 border border-[#333] bg-[#1a1a1a] text-[10px] tracking-widest text-[#00ff41] mb-6"
+          >
             <Database className="w-3 h-3" />
             VECTOR DATABASE TECHNOLOGY
           </div>
-          <h2 className="font-mono text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <h2
+            ref={headerTitleRef}
+            style={{ opacity: 0 }}
+            className="font-mono text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4"
+          >
             What is <span className="text-[#00ff41] terminal-glow">Memvid</span>?
           </h2>
-          <p className="text-[#888] max-w-2xl mx-auto text-sm sm:text-base">
+          <p
+            ref={headerDescRef}
+            style={{ opacity: 0 }}
+            className="text-[#888] max-w-2xl mx-auto text-sm sm:text-base"
+          >
             A revolutionary approach to memory storage. Your thoughts compressed into video frames,
             searchable by meaning, not just keywords.
           </p>
@@ -63,7 +184,7 @@ const Memvid = () => {
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Animated Visualization */}
-          <div className="relative">
+          <div ref={leftPanelRef} style={{ opacity: 0 }} className="relative">
             <div className="border border-[#333] bg-[#0d0d0d] p-8 relative overflow-hidden">
               {/* Terminal header */}
               <div className="absolute top-0 left-0 right-0 bg-[#1a1a1a] px-3 py-2 flex items-center gap-2 border-b border-[#333]">
@@ -153,7 +274,7 @@ const Memvid = () => {
                     </div>
                   </div>
 
-                  {/* Vector representation animation - Enhanced */}
+                  {/* Vector representation animation */}
                   <div className="w-full mt-4 border border-[#333] bg-[#0a0a0a] overflow-hidden">
                     <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#333] bg-[#111]">
                       <span className="text-[9px] text-[#666] font-mono">EMBEDDING SPACE</span>
@@ -303,7 +424,7 @@ const Memvid = () => {
 
           {/* Right: Explanation */}
           <div className="space-y-6">
-            <div className="space-y-4">
+            <div ref={rightTitleRef} style={{ opacity: 0 }} className="space-y-4">
               <h3 className="font-mono text-xl text-white flex items-center gap-2">
                 <Zap className="w-5 h-5 text-[#00ff41]" />
                 Why Memvid for Reminor?
@@ -320,8 +441,8 @@ const Memvid = () => {
             </div>
 
             {/* Feature cards */}
-            <div className="grid gap-4">
-              <div className="border border-[#333] bg-[#0d0d0d] p-4 hover:border-[#00ff41]/50 transition-colors">
+            <div ref={featureCardsRef} className="grid gap-4">
+              <div style={{ opacity: 0 }} className="border border-[#333] bg-[#0d0d0d] p-4 hover:border-[#00ff41]/50 transition-colors">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 border border-[#00ff41] flex items-center justify-center flex-shrink-0">
                     <Database className="w-4 h-4 text-[#00ff41]" />
@@ -335,7 +456,7 @@ const Memvid = () => {
                 </div>
               </div>
 
-              <div className="border border-[#333] bg-[#0d0d0d] p-4 hover:border-[#00ff41]/50 transition-colors">
+              <div style={{ opacity: 0 }} className="border border-[#333] bg-[#0d0d0d] p-4 hover:border-[#00ff41]/50 transition-colors">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 border border-[#00ff41] flex items-center justify-center flex-shrink-0">
                     <Search className="w-4 h-4 text-[#00ff41]" />
@@ -350,7 +471,7 @@ const Memvid = () => {
                 </div>
               </div>
 
-              <div className="border border-[#333] bg-[#0d0d0d] p-4 hover:border-[#00ff41]/50 transition-colors">
+              <div style={{ opacity: 0 }} className="border border-[#333] bg-[#0d0d0d] p-4 hover:border-[#00ff41]/50 transition-colors">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 border border-[#00ff41] flex items-center justify-center flex-shrink-0">
                     <MessageSquare className="w-4 h-4 text-[#00ff41]" />
@@ -367,7 +488,7 @@ const Memvid = () => {
             </div>
 
             {/* Code snippet */}
-            <div className="border border-[#333] bg-[#0d0d0d] overflow-hidden">
+            <div ref={codeSnippetRef} style={{ opacity: 0 }} className="border border-[#333] bg-[#0d0d0d] overflow-hidden">
               <div className="bg-[#1a1a1a] px-3 py-1.5 border-b border-[#333]">
                 <span className="text-[9px] text-[#666]">example query</span>
               </div>
