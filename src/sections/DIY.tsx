@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Printer, Download, ExternalLink, Box, Cable, Monitor, Usb } from 'lucide-react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { Printer, Download, ExternalLink, Box, Cable, Monitor, Usb, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const components = [
   {
@@ -32,8 +32,45 @@ const components = [
   },
 ];
 
+const carouselImages = [
+  { src: '/upload/Stampante.jpg', alt: 'Reminor - 3D Printer View' },
+  { src: '/upload/Viewrear.jpg', alt: 'Reminor - Rear View' },
+  { src: '/upload/viewsx.jpg', alt: 'Reminor - Side View' },
+];
+
 const DIY = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoplay = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    startAutoplay();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [startAutoplay]);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+    startAutoplay();
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+    startAutoplay();
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    startAutoplay();
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -75,29 +112,68 @@ const DIY = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left: 3D Preview */}
+          {/* Left: Photo Carousel */}
           <div className="reveal" style={{ transitionDelay: '0.2s' }}>
             <div className="relative">
               {/* Corner Accents */}
-              <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#00ff41]" />
-              <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#00ff41]" />
-              <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#00ff41]" />
-              <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[#00ff41]" />
+              <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-[#00ff41] z-10" />
+              <div className="absolute -top-2 -right-2 w-4 h-4 border-t-2 border-r-2 border-[#00ff41] z-10" />
+              <div className="absolute -bottom-2 -left-2 w-4 h-4 border-b-2 border-l-2 border-[#00ff41] z-10" />
+              <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-[#00ff41] z-10" />
 
               <div className="border-2 border-[#333] bg-[#0a0a0a] overflow-hidden">
                 <div className="bg-[#1a1a1a] px-3 py-2 flex items-center justify-between border-b border-[#333]">
-                  <span className="text-[10px] text-[#666]">BAMBU LAB STUDIO — 3D PREVIEW</span>
+                  <span className="text-[10px] text-[#666]">REMINOR — GALLERY</span>
                   <div className="flex gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-[#ff5f56]" />
                     <div className="w-2 h-2 rounded-full bg-[#ffbd2e]" />
                     <div className="w-2 h-2 rounded-full bg-[#27c93f]" />
                   </div>
                 </div>
-                <img
-                  src="/upload/Reminior3dview.png"
-                  alt="Reminor 3D printable case preview"
-                  className="w-full h-auto"
-                />
+
+                {/* Carousel */}
+                <div className="relative overflow-hidden">
+                  <div
+                    className="flex transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  >
+                    {carouselImages.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image.src}
+                        alt={image.alt}
+                        className="w-full h-auto flex-shrink-0 object-cover"
+                      />
+                    ))}
+                  </div>
+
+                  {/* Navigation Arrows */}
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-black/60 border border-[#333] hover:border-[#00ff41] text-white hover:text-[#00ff41] transition-colors"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-black/60 border border-[#333] hover:border-[#00ff41] text-white hover:text-[#00ff41] transition-colors"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Dot Indicators */}
+                <div className="flex justify-center gap-2 py-3 bg-[#0a0a0a] border-t border-[#333]">
+                  {carouselImages.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToSlide(index)}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        index === currentSlide ? 'bg-[#00ff41]' : 'bg-[#333] hover:bg-[#666]'
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
