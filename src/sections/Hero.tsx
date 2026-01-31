@@ -9,6 +9,9 @@ type VideoPhase = 'playing' | 'transitioning' | 'done';
 const Hero = () => {
   const [videoPhase, setVideoPhase] = useState<VideoPhase>('playing');
   const [typedText, setTypedText] = useState('');
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
   const fullText = 'Open-source, self-hosted personal diary app.';
 
   // Video refs
@@ -29,6 +32,13 @@ const Hero = () => {
   const entryBlockRef = useRef<HTMLDivElement>(null);
   const emotionBarsRef = useRef<HTMLDivElement>(null);
   const aiBlockRef = useRef<HTMLDivElement>(null);
+
+  // Track mobile viewport
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Trigger transition — called when video is about to end
   const triggerTransition = useCallback(() => {
@@ -216,7 +226,10 @@ const Hero = () => {
             muted
             playsInline
             className="w-full h-full object-cover"
-            src="/upload/From_Physical_Object_to_Digital_Void.mp4"
+            src={isMobile
+              ? "/upload/Video_Generation_From_Image.mp4"
+              : "/upload/From_Physical_Object_to_Digital_Void.mp4"
+            }
           />
         </div>
       )}
